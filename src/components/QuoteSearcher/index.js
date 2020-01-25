@@ -1,15 +1,19 @@
 import React, { Component } from "react";
 import Quote from "./Quote";
+import SearchQuote from "./SearchQuote";
 
 export default class QuoteSearcher extends Component {
   state = {
-    fetching: true,
+    fetching: false,
     quotes: []
   };
 
-  componentDidMount = async () => {
+  search = async keyword => {
+    this.setState({ fetching: true });
     const response = await fetch(
-      "https://quote-garden.herokuapp.com/quotes/search/hope"
+      `https://quote-garden.herokuapp.com/quotes/search/${encodeURIComponent(
+        keyword
+      )}`
     );
     const quotesResponse = await response.json();
     this.addQuotesToState(
@@ -57,7 +61,7 @@ export default class QuoteSearcher extends Component {
   };
 
   render() {
-    const addedLikesAndDislikes = this.state.quotes.reduce(
+    const totalLikesAndDislikes = this.state.quotes.reduce(
       (sumObj, quote) => {
         return quote.likedOrDisliked === "liked"
           ? { ...sumObj, likes: sumObj.likes + 1 }
@@ -71,9 +75,10 @@ export default class QuoteSearcher extends Component {
     return (
       <div>
         <h1>Quotes</h1>
+        <SearchQuote search={this.search} />
         <h2>
-          Likes: {addedLikesAndDislikes.likes} / Dislikes:{" "}
-          {addedLikesAndDislikes.dislikes}
+          Likes: {totalLikesAndDislikes.likes} / Dislikes:{" "}
+          {totalLikesAndDislikes.dislikes}
         </h2>
         <div>
           {this.state.fetching
