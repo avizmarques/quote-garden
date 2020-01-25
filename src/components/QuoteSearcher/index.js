@@ -17,13 +17,23 @@ export default class QuoteSearcher extends Component {
         )}`
       );
       const quotesResponse = await response.json();
+      const sortedQuotes = [...quotesResponse.results].sort((a, b) =>
+        a.quoteText.localeCompare(b.quoteText)
+      );
+
       this.addQuotesToState(
-        quotesResponse.results.map(result => ({
-          id: result._id,
-          quoteText: result.quoteText,
-          quoteAuthor: result.quoteAuthor,
-          likedOrDisliked: null
-        }))
+        sortedQuotes
+          .filter(
+            (result, i) =>
+              i !== sortedQuotes.length - 1 &&
+              result.quoteText !== sortedQuotes[i + 1].quoteText
+          )
+          .map(result => ({
+            id: result._id,
+            quoteText: result.quoteText,
+            quoteAuthor: result.quoteAuthor,
+            likedOrDisliked: null
+          }))
       );
       this.setState({ fetching: false });
     } catch {
