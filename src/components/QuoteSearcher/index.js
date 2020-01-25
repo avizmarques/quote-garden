@@ -57,12 +57,29 @@ export default class QuoteSearcher extends Component {
   };
 
   render() {
+    const addedLikesAndDislikes = this.state.quotes.reduce(
+      (sumObj, quote) => {
+        return quote.likedOrDisliked === "liked"
+          ? { ...sumObj, likes: sumObj.likes + 1 }
+          : quote.likedOrDisliked === "disliked"
+          ? { ...sumObj, dislikes: sumObj.dislikes + 1 }
+          : sumObj;
+      },
+      { likes: 0, dislikes: 0 }
+    );
+
     return (
       <div>
         <h1>Quotes</h1>
-        {this.state.fetching
-          ? "Loading..."
-          : this.createQuoteCards(this.state.quotes)}
+        <h2>
+          Likes: {addedLikesAndDislikes.likes} / Dislikes:{" "}
+          {addedLikesAndDislikes.dislikes}
+        </h2>
+        <div>
+          {this.state.fetching
+            ? "Loading..."
+            : this.createQuoteCards(this.state.quotes)}
+        </div>
       </div>
     );
   }
