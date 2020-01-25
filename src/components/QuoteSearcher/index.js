@@ -5,7 +5,8 @@ import SearchQuote from "./SearchQuote";
 export default class QuoteSearcher extends Component {
   state = {
     fetching: false,
-    quotes: []
+    quotes: [],
+    noQuotesFound: false
   };
 
   search = async keyword => {
@@ -21,28 +22,28 @@ export default class QuoteSearcher extends Component {
         a.quoteText.localeCompare(b.quoteText)
       );
 
-      this.addQuotesToState(
-        sortedQuotes
-          .filter(
-            (result, i) =>
-              i !== sortedQuotes.length - 1 &&
-              result.quoteText !== sortedQuotes[i + 1].quoteText
-          )
-          .map(result => ({
-            id: result._id,
-            quoteText: result.quoteText,
-            quoteAuthor: result.quoteAuthor,
-            likedOrDisliked: null
-          }))
-      );
+      sortedQuotes.length === 0
+        ? this.setState({ noQuotesFound: `No results for ${keyword}` })
+        : this.setState({
+            quotes: sortedQuotes
+              .filter(
+                (result, i) =>
+                  i !== sortedQuotes.length - 1 &&
+                  result.quoteText !== sortedQuotes[i + 1].quoteText
+              )
+              .map(result => ({
+                id: result._id,
+                quoteText: result.quoteText,
+                quoteAuthor: result.quoteAuthor,
+                likedOrDisliked: null
+              })),
+            noQuotesFound: false
+          });
+
       this.setState({ fetching: false });
     } catch {
       console.error("Error loading information");
     }
-  };
-
-  addQuotesToState = quotes => {
-    return this.setState({ quotes });
   };
 
   createQuoteCards = quotes => {
@@ -97,6 +98,8 @@ export default class QuoteSearcher extends Component {
         <div>
           {this.state.fetching
             ? "Loading..."
+            : this.state.noQuotesFound
+            ? this.state.noQuotesFound
             : this.createQuoteCards(this.state.quotes)}
         </div>
       </div>
