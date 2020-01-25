@@ -9,22 +9,26 @@ export default class QuoteSearcher extends Component {
   };
 
   search = async keyword => {
-    this.setState({ fetching: true });
-    const response = await fetch(
-      `https://quote-garden.herokuapp.com/quotes/search/${encodeURIComponent(
-        keyword
-      )}`
-    );
-    const quotesResponse = await response.json();
-    this.addQuotesToState(
-      quotesResponse.results.map(result => ({
-        id: result._id,
-        quoteText: result.quoteText,
-        quoteAuthor: result.quoteAuthor,
-        likedOrDisliked: null
-      }))
-    );
-    this.setState({ fetching: false });
+    try {
+      this.setState({ fetching: true });
+      const response = await fetch(
+        `https://quote-garden.herokuapp.com/quotes/search/${encodeURIComponent(
+          keyword
+        )}`
+      );
+      const quotesResponse = await response.json();
+      this.addQuotesToState(
+        quotesResponse.results.map(result => ({
+          id: result._id,
+          quoteText: result.quoteText,
+          quoteAuthor: result.quoteAuthor,
+          likedOrDisliked: null
+        }))
+      );
+      this.setState({ fetching: false });
+    } catch {
+      console.error("Error loading information");
+    }
   };
 
   addQuotesToState = quotes => {
