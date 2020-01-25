@@ -92,7 +92,7 @@ export default class QuoteSearcher extends Component {
         <h1>Quotes</h1>
         <SearchQuote search={this.search} />
         <h2>
-          Likes: {totalLikesAndDislikes.likes} / Dislikes:{" "}
+          Liked: {totalLikesAndDislikes.likes} / Disliked:{" "}
           {totalLikesAndDislikes.dislikes}
         </h2>
         <div>
