@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Quote from "./Quote";
 import SearchQuote from "./SearchQuote";
+import AddQuote from "./AddQuote";
 
 export default class QuoteSearcher extends Component {
   state = {
@@ -75,6 +76,10 @@ export default class QuoteSearcher extends Component {
     });
   };
 
+  addToQuotesList = quote => {
+    return this.setState({ quotes: [...this.state.quotes, quote] });
+  };
+
   render() {
     const totalLikesAndDislikes = this.state.quotes.reduce(
       (sumObj, quote) => {
@@ -91,6 +96,7 @@ export default class QuoteSearcher extends Component {
       <div>
         <h1>Quotes</h1>
         <SearchQuote search={this.search} />
+        <AddQuote addToQuotesList={this.addToQuotesList} />
         <h2>
           Liked: {totalLikesAndDislikes.likes} / Disliked:{" "}
           {totalLikesAndDislikes.dislikes}

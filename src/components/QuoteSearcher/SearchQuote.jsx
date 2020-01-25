@@ -5,12 +5,12 @@ export default class SearchQuote extends Component {
     keyword: ""
   };
 
-  updateKeyword = event => {
-    this.setState({ keyword: event.target.value });
+  updateKeyword = e => {
+    this.setState({ keyword: e.target.value });
   };
 
-  onSubmit = event => {
-    event.preventDefault();
+  onSubmit = e => {
+    e.preventDefault();
     this.props.search(this.state.keyword);
   };
 
